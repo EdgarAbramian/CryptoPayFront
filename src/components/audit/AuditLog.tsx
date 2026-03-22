@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
-import { 
-  CheckCircle, 
-  AlertTriangle, 
-  Search, 
-  Filter, 
-  Download, 
-  Loader2, 
-  Shield, 
-  User as UserIcon, 
-  Calendar 
+import {
+  CheckCircle,
+  AlertTriangle,
+  Search,
+  Filter,
+  Download,
+  Loader2,
+  Shield,
+  User as UserIcon,
+  Calendar
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -20,18 +20,18 @@ import { api } from '@/lib/api'
 // No static audit events needed anymore - using real data
 
 const statusConfig = {
-  success: { 
-    color: 'success', 
+  success: {
+    color: 'success',
     icon: CheckCircle,
     bgColor: 'bg-green-500/10 border-green-500/20'
   },
-  warning: { 
-    color: 'warning', 
+  warning: {
+    color: 'warning',
     icon: AlertTriangle,
     bgColor: 'bg-yellow-500/10 border-yellow-500/20'
   },
-  error: { 
-    color: 'destructive', 
+  error: {
+    color: 'destructive',
     icon: AlertTriangle,
     bgColor: 'bg-red-500/10 border-red-500/20'
   },
@@ -63,7 +63,7 @@ export function AuditLog() {
     // Basic search filtering
     const searchStr = (event.action || '').toLowerCase() + (event.user_id || '').toLowerCase() + (event.target_type || '').toLowerCase();
     const matchesSearch = searchStr.includes(searchTerm.toLowerCase());
-    
+
     // Status filtering (simulated since backend might not send status yet)
     const matchesStatus = statusFilter === 'all' || (event.status || 'success') === statusFilter;
     return matchesSearch && matchesStatus;
@@ -92,7 +92,7 @@ export function AuditLog() {
                   className="pl-10"
                 />
               </div>
-              
+
               <div className="flex space-x-2">
                 <Button
                   variant={statusFilter === 'all' ? 'default' : 'glass'}
@@ -124,7 +124,7 @@ export function AuditLog() {
                 </Button>
               </div>
             </div>
-            
+
             <div className="flex space-x-2">
               <Button variant="glass" size="sm">
                 <Filter className="w-4 h-4 mr-2" />
@@ -157,13 +157,12 @@ export function AuditLog() {
               {filteredEvents.map((event) => {
                 const status = event.status || 'success'
                 const StatusIcon = (statusConfig as any)[status]?.icon || CheckCircle
-                
+
                 return (
                   <div
                     key={event.id}
-                    className={`p-4 rounded-lg border transition-all duration-300 hover:bg-white/5 ${
-                      (statusConfig as any)[status]?.bgColor || 'bg-white/5'
-                    }`}
+                    className={`p-4 rounded-lg border transition-all duration-300 hover:bg-white/5 ${(statusConfig as any)[status]?.bgColor || 'bg-white/5'
+                      }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-4">
@@ -192,7 +191,7 @@ export function AuditLog() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <Badge
                         variant={(statusConfig as any)[status]?.color || 'outline'}
                         className="flex items-center space-x-1"
