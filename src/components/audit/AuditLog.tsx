@@ -1,5 +1,15 @@
-```javascript
 import { useState, useEffect } from 'react'
+import { 
+  CheckCircle, 
+  AlertTriangle, 
+  Search, 
+  Filter, 
+  Download, 
+  Loader2, 
+  Shield, 
+  User as UserIcon, 
+  Calendar 
+} from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
