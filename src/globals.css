@@ -1,0 +1,536 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Crypto Wallet Styles */
+@layer components {
+  .crypto-card {
+    @apply bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-sm border border-slate-700/50 rounded-xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  .crypto-card:hover {
+    @apply border-blue-500/50 shadow-blue-500/20;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+  }
+  
+  .crypto-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .crypto-balance-card {
+    @apply bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg p-4;
+    backdrop-filter: blur(10px);
+  }
+  
+  .crypto-status-pending {
+    @apply text-yellow-400 bg-yellow-400/10 border-yellow-400/20;
+  }
+  
+  .crypto-status-confirming {
+    @apply text-blue-400 bg-blue-400/10 border-blue-400/20;
+  }
+  
+  .crypto-status-completed {
+    @apply text-green-400 bg-green-400/10 border-green-400/20;
+  }
+  
+  .crypto-status-failed {
+    @apply text-red-400 bg-red-400/10 border-red-400/20;
+  }
+  
+  .crypto-timer {
+    @apply font-mono text-2xl font-bold;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  }
+  
+  .crypto-address {
+    @apply font-mono text-sm bg-slate-800/50 border border-slate-600 rounded-md p-2;
+    word-break: break-all;
+  }
+  
+  .crypto-fee-card {
+    @apply bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg;
+  }
+  
+  .crypto-network-badge {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .crypto-network-bitcoin {
+    @apply bg-orange-500/20 text-orange-400 border border-orange-500/30;
+  }
+  
+  .crypto-network-ethereum {
+    @apply bg-blue-500/20 text-blue-400 border border-blue-500/30;
+  }
+  
+  .crypto-network-tron {
+    @apply bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+  
+  .crypto-network-bsc {
+    @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+  }
+  
+  .crypto-progress-bar {
+    @apply h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full;
+    animation: pulse 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .crypto-transaction-card {
+    @apply bg-gradient-to-r from-slate-900/50 to-slate-800/50 border border-slate-700/50 rounded-lg p-4;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .crypto-transaction-card:hover {
+    @apply border-blue-500/50 transform scale-[1.02];
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+  }
+  
+  .crypto-wallet-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  
+  .crypto-deposit-form {
+    @apply space-y-6 p-6 bg-gradient-to-br from-slate-900/80 to-slate-800/80 rounded-xl border border-slate-700/50;
+  }
+  
+  .crypto-withdrawal-form {
+    @apply space-y-6 p-6 bg-gradient-to-br from-red-900/20 to-orange-900/20 rounded-xl border border-red-700/30;
+  }
+  
+  .crypto-amount-input {
+    @apply bg-slate-800/50 border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+  }
+  
+  .crypto-address-input {
+    @apply bg-slate-800/50 border-slate-600 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 font-mono;
+  }
+  
+  .crypto-address-valid {
+    @apply border-green-500 ring-2 ring-green-500/20;
+  }
+  
+  .crypto-address-invalid {
+    @apply border-red-500 ring-2 ring-red-500/20;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 45 70% 50%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 45 70% 15%;
+    --accent-foreground: 45 70% 90%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 15%;
+    --input: 240 5% 10%;
+    --ring: 45 70% 50%;
+    --radius: 0.75rem;
+    
+    /* Gateway Premium Palette */
+    --gateway-gold: #d4af37;
+    --gateway-gold-light: #f4d03f;
+    --gateway-gold-dark: #996515;
+    --gateway-charcoal: #121214;
+    --gateway-pearl: #f8f8ff;
+    --gateway-bronze: #cd7f32;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-black font-sans text-foreground;
+    background: #000;
+    background-image: 
+      radial-gradient(ellipse at top, rgba(16, 16, 16, 0.8) 0%, transparent 70%),
+      radial-gradient(ellipse at bottom, rgba(8, 8, 8, 0.6) 0%, transparent 70%);
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(40, 40, 40, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(30, 30, 30, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    @apply rounded-full;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(18, 18, 20, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 24px;
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 12px 40px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%, rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(90deg, 
+      #d4af37 0%, 
+      #f4d03f 25%, 
+      #f8f8ff 50%, 
+      #f4d03f 75%, 
+      #d4af37 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gradient-flow 6s ease-in-out infinite;
+  }
+  
+  .glow-effect {
+    /* Remove glow effects */
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-200 ease-out;
+    transition: all 0.2s ease-out;
+  }
+  
+  .hover-glow:hover {
+    transform: translateY(-3px);
+    background: rgba(12, 12, 12, 0.95);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 12px 40px rgba(0, 0, 0, 0.7),
+      0 4px 16px rgba(255, 255, 255, 0.02);
+  }
+  
+  .gateway-gradient-primary {
+    background: linear-gradient(82deg, #1a1a1a, #2a2a2a 32%, #1e1e1e 64.5%, #252525 98%);
+  }
+  
+  .gateway-gradient-conic {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1f1f1f 100%);
+  }
+  
+  .gateway-dark-gradient {
+    background: linear-gradient(135deg, #0a0a0b 0%, #1a1a1c 50%, #0a0a0b 100%);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+  
+  .gateway-dark-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.05) 50%, transparent 100%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+/* Premium background */
+.premium-bg {
+  background: #0a0a0b;
+  position: relative;
+}
+
+.premium-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+    radial-gradient(circle at 80% 10%, rgba(248, 248, 255, 0.03) 0%, transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(153, 101, 21, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+@keyframes gradient-flow {
+  0%, 100% { 
+    background-position: 0% 50%; 
+  }
+  25% { 
+    background-position: 25% 50%; 
+  }
+  50% { 
+    background-position: 100% 50%; 
+  }
+  75% { 
+    background-position: 75% 50%; 
+  }
+}
+
+/* =======================================
+   ИДЕАЛЬНАЯ МОБИЛЬНАЯ ОПТИМИЗАЦИЯ
+   ======================================= */
+
+@media (max-width: 768px) {
+  /* Touch-friendly элементы */
+  button, a, [role="button"], [tabindex="0"] {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Улучшенная читаемость на мобильных */
+  .glass-card {
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  
+  /* Плавная прокрутка для iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Предотвращение зума на инпутах */
+  input, select, textarea {
+    font-size: 16px !important;
+    transform: translateZ(0);
+  }
+  
+  /* Улучшенные активные состояния */
+  .hover-glow:active {
+    transform: scale(0.98) translateY(0px);
+    transition: transform 0.1s ease-out;
+  }
+  
+  /* Мобильные анимации градиентов */
+  .gradient-text {
+    background-size: 200% 200%;
+    animation: mobile-gradient-shift 3s ease infinite;
+  }
+  
+  @keyframes mobile-gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Улучшенный фокус для доступности */
+  *:focus-visible {
+    outline: 2px solid #a855f7;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  
+  /* Лучший контраст */
+  .text-muted-foreground {
+    opacity: 0.85 !important;
+  }
+  
+  /* Оптимизированные карточки для мобильных */
+  .glass-card {
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.4),
+      0 1px 0 rgba(255, 255, 255, 0.1) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Плавные переходы */
+  .transition-all {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Мобильные отступы */
+  .mobile-padding {
+    padding: 1rem;
+  }
+  
+  /* Оптимизация для темных тем на мобильных */
+  .cosmic-bg::before {
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(121, 255, 247, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(159, 83, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 152, 226, 0.06) 0%, transparent 50%);
+  }
+  
+  /* Мобильная типографика */
+  h1 { font-size: 1.75rem; line-height: 1.2; }
+  h2 { font-size: 1.5rem; line-height: 1.3; }
+  h3 { font-size: 1.25rem; line-height: 1.4; }
+  
+  /* Мобильные кнопки */
+  .btn-mobile {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+  
+  /* Предотвращение случайного выделения */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Мобильная сетка */
+  .mobile-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+  
+  .mobile-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .mobile-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  
+  /* Скрытие элементов на мобильных */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Улучшенные состояния загрузки */
+  .loading-skeleton {
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.1) 25%, 
+      rgba(255, 255, 255, 0.2) 50%, 
+      rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+  }
+  
+  @keyframes loading-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Мобильная нижняя навигация */
+  .mobile-bottom-nav {
+    backdrop-filter: blur(40px) saturate(2);
+    -webkit-backdrop-filter: blur(40px) saturate(2);
+    background: linear-gradient(180deg, 
+      rgba(0, 0, 0, 0.95) 0%, 
+      rgba(20, 20, 40, 0.9) 50%, 
+      rgba(0, 0, 0, 0.98) 100%);
+    border-top: 1px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 
+      0 -8px 40px rgba(0, 0, 0, 0.8),
+      0 -2px 20px rgba(147, 51, 234, 0.2),
+      0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+  }
+
+  .mobile-nav-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-nav-item.active {
+    transform: scale(1.1);
+  }
+
+  /* Анимации для навигации */
+  @keyframes navItemPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .nav-pulse {
+    animation: navItemPulse 2s ease-in-out infinite;
+  }
+
+  /* Safe area для устройств с выемкой */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+/* Дополнительные оптимизации для очень маленьких экранов */
+@media (max-width: 480px) {
+  .glass-card {
+    border-radius: 12px;
+    margin: 0.25rem;
+  }
+  
+  .mobile-padding {
+    padding: 0.75rem;
+  }
+  
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+}
+
+/* Оптимизации для landscape ориентации на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+  .mobile-landscape-adjust {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
