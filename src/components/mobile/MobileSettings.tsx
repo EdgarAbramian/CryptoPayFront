@@ -187,27 +187,27 @@ export function MobileSettings() {
                   <item.icon className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-medium text-white">{item.label}</p>
-                    {item.value && (
-                      <p className="text-xs text-muted-foreground">{item.value}</p>
+                    {(item as any).value && (
+                      <p className="text-xs text-muted-foreground">{(item as any).value}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  {item.badge && (
+                  {(item as any).badge && (
                     <Badge className={`text-xs ${
-                      item.badge === 'Verified' || item.badge === 'Enabled' 
+                      (item as any).badge === 'Verified' || (item as any).badge === 'Enabled' 
                         ? 'bg-green-500/20 text-green-400 border-green-500/30'
                         : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
                     }`}>
-                      {item.badge}
+                      {(item as any).badge}
                     </Badge>
                   )}
                   
-                  {item.toggle ? (
+                  {(item as any).toggle ? (
                     <Switch
-                      checked={getToggleValue(category.title.toLowerCase(), item.toggle)}
-                      onCheckedChange={() => handleToggle(category.title.toLowerCase(), item.toggle!)}
+                      checked={!!getToggleValue(category.title.toLowerCase(), (item as any).toggle)}
+                      onCheckedChange={() => handleToggle(category.title.toLowerCase(), (item as any).toggle!)}
                     />
                   ) : (
                     <ChevronRight className="w-4 h-4 text-muted-foreground" />

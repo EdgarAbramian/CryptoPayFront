@@ -130,7 +130,7 @@ export function TransactionStatus({ transaction, onClose }: TransactionStatusPro
   const getProgressPercentage = () => {
     if (currentTransaction.status === 'completed') return 100
     if (currentTransaction.status === 'failed') return 0
-    if (currentTransaction.status === 'pending') return 20
+    if (currentTransaction.status === 'PENDING') return 20
     
     // For confirming status, calculate based on confirmations
     return 20 + (currentTransaction.confirmations / currentTransaction.requiredConfirmations) * 80

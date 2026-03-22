@@ -97,7 +97,7 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
 
   const fetchUnreadCount = async () => {
     try {
-      const res = await api.getUnreadNotificationCount()
+      const res = await api.getUnreadNotificationsCount()
       setUnreadCount(res.count)
     } catch (e) {}
   }

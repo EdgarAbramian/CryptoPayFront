@@ -176,7 +176,7 @@ export function DepositForm({ wallet, onSubmit }: DepositFormProps) {
       currency: wallet.currency,
       amount: depositAmount,
       address: depositAddress,
-      status: 'pending',
+      status: 'PENDING',
       confirmations: 0,
       requiredConfirmations: selectedNetworkInfo?.minConfirmations || 6,
       fee: 0,

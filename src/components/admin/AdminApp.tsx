@@ -77,7 +77,7 @@ export function AdminApp() {
     <>
       <MobileLayoutWrapper
         currentPage={currentPage}
-        onPageChange={setCurrentPage}
+        onPageChange={(page) => setCurrentPage(page as AdminPage)}
         type="admin"
         pageNames={pageNames}
       >

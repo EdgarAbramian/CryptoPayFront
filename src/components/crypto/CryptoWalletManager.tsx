@@ -8,11 +8,11 @@ import { WithdrawalForm } from './WithdrawalForm'
 import { TransactionStatus } from './TransactionStatus'
 import { CryptoWallet, CryptoTransaction } from '@/types/crypto'
 import { formatCurrency } from '@/lib/utils'
-import { 
-  Wallet, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
-  Copy, 
+import {
+  Wallet,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Copy,
   QrCode,
   RefreshCw,
   TrendingUp,
@@ -82,7 +82,7 @@ const mockTransactions: CryptoTransaction[] = [
     amount: 0.5,
     address: '0x742d35Cc6634C0532925a3b8D2482fC0C8d8c',
     txHash: '0x9a8b7c6d5e4f3a2b1c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6',
-    status: 'pending',
+    status: 'PENDING',
     confirmations: 0,
     requiredConfirmations: 12,
     fee: 0.002,
@@ -133,7 +133,7 @@ export function CryptoWalletManager() {
 
   if (showTransactionStatus && currentTransaction) {
     return (
-      <TransactionStatus 
+      <TransactionStatus
         transaction={currentTransaction}
         onClose={() => {
           setShowTransactionStatus(false)
@@ -163,13 +163,12 @@ export function CryptoWalletManager() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {mockWallets.map((wallet) => (
-              <Card 
+              <Card
                 key={wallet.currency}
-                className={`cursor-pointer transition-all hover:scale-105 ${
-                  activeWallet.currency === wallet.currency 
-                    ? 'ring-2 ring-blue-500 bg-blue-500/10' 
+                className={`cursor-pointer transition-all hover:scale-105 ${activeWallet.currency === wallet.currency
+                    ? 'ring-2 ring-blue-500 bg-blue-500/10'
                     : 'hover:bg-muted/50'
-                }`}
+                  }`}
                 onClick={() => setActiveWallet(wallet)}
               >
                 <CardContent className="p-4">
@@ -189,7 +188,7 @@ export function CryptoWalletManager() {
                       {wallet.network}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-1">
                     <div>
                       <p className="text-xs text-muted-foreground">Available</p>
@@ -197,7 +196,7 @@ export function CryptoWalletManager() {
                         {formatCryptoAmount(wallet.balance, wallet.currency)}
                       </p>
                     </div>
-                    
+
                     {wallet.pendingBalance > 0 && (
                       <div>
                         <p className="text-xs text-muted-foreground">Pending</p>
@@ -245,7 +244,7 @@ export function CryptoWalletManager() {
                 {formatCryptoAmount(activeWallet.balance, activeWallet.currency)}
               </p>
             </div>
-            
+
             {activeWallet.pendingBalance > 0 && (
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">Pending Balance</p>
@@ -254,7 +253,7 @@ export function CryptoWalletManager() {
                 </p>
               </div>
             )}
-            
+
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Total Balance</p>
               <p className="text-xl font-semibold text-white">
@@ -270,8 +269,8 @@ export function CryptoWalletManager() {
               <code className="flex-1 text-sm font-mono text-white break-all">
                 {activeWallet.address}
               </code>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => copyAddress(activeWallet.address)}
               >
@@ -301,17 +300,17 @@ export function CryptoWalletManager() {
                 </TabsTrigger>
               </TabsList>
             </div>
-            
+
             <TabsContent value="deposit" className="p-6 pt-4">
-              <DepositForm 
-                wallet={activeWallet} 
+              <DepositForm
+                wallet={activeWallet}
                 onSubmit={handleTransactionSubmit}
               />
             </TabsContent>
-            
+
             <TabsContent value="withdrawal" className="p-6 pt-4">
-              <WithdrawalForm 
-                wallet={activeWallet} 
+              <WithdrawalForm
+                wallet={activeWallet}
                 onSubmit={handleTransactionSubmit}
               />
             </TabsContent>
@@ -347,8 +346,8 @@ export function CryptoWalletManager() {
                       {transaction.type}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {transaction.txHash ? 
-                        `${transaction.txHash.slice(0, 10)}...${transaction.txHash.slice(-10)}` : 
+                      {transaction.txHash ?
+                        `${transaction.txHash.slice(0, 10)}...${transaction.txHash.slice(-10)}` :
                         'Processing...'
                       }
                     </div>
@@ -357,19 +356,18 @@ export function CryptoWalletManager() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="text-right">
-                  <div className={`font-semibold ${
-                    transaction.type === 'deposit' ? 'text-green-400' : 'text-red-400'
-                  }`}>
+                  <div className={`font-semibold ${transaction.type === 'deposit' ? 'text-green-400' : 'text-red-400'
+                    }`}>
                     {transaction.type === 'deposit' ? '+' : '-'}
                     {formatCryptoAmount(transaction.amount, transaction.currency)}
                   </div>
-                  <Badge 
+                  <Badge
                     variant={
-                      transaction.status === 'completed' ? 'success' : 
-                      transaction.status === 'failed' ? 'destructive' : 
-                      'warning'
+                      transaction.status === 'completed' ? 'success' :
+                        transaction.status === 'failed' ? 'destructive' :
+                          'warning'
                     }
                     className="text-xs"
                   >

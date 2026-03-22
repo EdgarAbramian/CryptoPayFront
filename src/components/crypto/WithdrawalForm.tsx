@@ -223,7 +223,7 @@ export function WithdrawalForm({ wallet, onSubmit }: WithdrawalFormProps) {
       currency: wallet.currency,
       amount: withdrawalAmount,
       address: address,
-      status: 'pending',
+      status: 'PENDING',
       confirmations: 0,
       requiredConfirmations: selectedNetworkInfo?.minConfirmations || 6,
       fee: withdrawalFee,

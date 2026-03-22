@@ -37,7 +37,7 @@ export function MerchantApp() {
           <ResponsivePageWrapper 
             page="balance" 
             type="merchant" 
-            desktopComponent={<MerchantBalance onNavigate={setCurrentPage} />} 
+            desktopComponent={<MerchantBalance onNavigate={(page) => setCurrentPage(page as MerchantPage)} />} 
           />
         )
       case 'crypto-wallets':
@@ -83,7 +83,7 @@ export function MerchantApp() {
     <>
       <MobileLayoutWrapper
         currentPage={currentPage}
-        onPageChange={setCurrentPage}
+        onPageChange={(page) => setCurrentPage(page as MerchantPage)}
         type="merchant"
         pageNames={pageNames}
       >
