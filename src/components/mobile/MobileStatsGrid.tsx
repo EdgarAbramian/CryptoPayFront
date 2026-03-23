@@ -26,7 +26,7 @@ export function MobileStatsGrid({ stats, layout = 'admin' }: MobileStatsGridProp
         {stats.slice(0, 2).map((stat, index) => {
           const isPositive = stat.change > 0
           const IconComponent = stat.icon
-          
+
           return (
             <Card key={stat.title} className="hover-glow">
               <CardContent className="p-4">
@@ -48,10 +48,10 @@ export function MobileStatsGrid({ stats, layout = 'admin' }: MobileStatsGridProp
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="space-y-1">
                     <p className="text-xl font-bold gradient-text">
-                      {stat.currency 
+                      {stat.currency
                         ? formatCurrency(stat.value)
                         : formatNumber(stat.value) + (stat.suffix || '')
                       }
@@ -72,7 +72,7 @@ export function MobileStatsGrid({ stats, layout = 'admin' }: MobileStatsGridProp
         {stats.slice(2).map((stat, index) => {
           const isPositive = stat.change > 0
           const IconComponent = stat.icon
-          
+
           return (
             <Card key={stat.title} className="hover-glow">
               <CardContent className="p-3">
@@ -80,10 +80,10 @@ export function MobileStatsGrid({ stats, layout = 'admin' }: MobileStatsGridProp
                   <div className={`w-8 h-8 rounded-lg ${stat.gradient} flex items-center justify-center`}>
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
-                  
+
                   <div className="space-y-1">
                     <p className="text-lg font-bold gradient-text">
-                      {stat.currency 
+                      {stat.currency
                         ? formatCurrency(stat.value)
                         : formatNumber(stat.value) + (stat.suffix || '')
                       }

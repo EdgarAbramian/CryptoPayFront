@@ -1,11 +1,36 @@
-import { Bell, Search, User, ChevronDown, Wallet, TrendingUp } from 'lucide-react'
+import { Bell, Search, User, ChevronDown, Wallet, TrendingUp, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
+import { useState, useEffect } from 'react'
+import { api, MerchantDashboardStats, RevenueOverview } from '@/lib/api'
+import { formatCurrency } from '@/lib/utils'
 
 export function MerchantTopBar() {
   const { user, switchRole } = useAuth()
+
+  const [stats, setStats] = useState<MerchantDashboardStats | null>(null)
+  const [revenue, setRevenue] = useState<RevenueOverview | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [statsData, revenueData] = await Promise.all([
+          api.getMerchantDashboardStats(),
+          api.getMerchantRevenueAnalytics({ period: 'day' })
+        ])
+        setStats(statsData)
+        setRevenue(revenueData)
+      } catch (error) {
+        console.error('Failed to fetch merchant topbar data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
 
   return (
     <header className="h-16 glass-card border-b border-amber-500/10 px-6 flex items-center justify-between">
@@ -34,7 +59,9 @@ export function MerchantTopBar() {
             <Wallet className="w-4 h-4 text-white/80" />
             <div>
               <div className="text-xs text-muted-foreground">Available</div>
-              <div className="text-sm font-semibold text-white">$15,247.82</div>
+              <div className="text-sm font-semibold text-white">
+                {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(stats?.balance_available_usd || 0)}
+              </div>
             </div>
           </div>
           <div className="w-px h-8 bg-amber-500/10"></div>
@@ -42,18 +69,20 @@ export function MerchantTopBar() {
             <TrendingUp className="w-4 h-4 text-green-400" />
             <div>
               <div className="text-xs text-muted-foreground">Today's Revenue</div>
-              <div className="text-sm font-semibold text-green-400">$1,892.34</div>
+              <div className="text-sm font-semibold text-green-400">
+                {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(revenue?.total_revenue_usd || 0)}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        {/* Notifications (Hidden as requested) */}
+        {/* <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
           <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center bg-red-500 text-xs">
             2
           </Badge>
-        </Button>
+        </Button> */}
 
         {/* User Menu */}
         <div className="flex items-center space-x-3 px-3 py-2 glass-card rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
@@ -67,14 +96,14 @@ export function MerchantTopBar() {
           <ChevronDown className="w-4 h-4 text-muted-foreground" />
         </div>
 
-        {/* Role Switch (Demo) */}
-        <Button 
+        {/* Role Switch (Hidden) */}
+        {/* <Button 
           variant="glass" 
           size="sm"
           onClick={() => switchRole('admin')}
         >
           Switch to Admin
-        </Button>
+        </Button> */}
       </div>
     </header>
   )

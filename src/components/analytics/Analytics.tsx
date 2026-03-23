@@ -1,6 +1,6 @@
 import { AnalyticsOverview } from './AnalyticsOverview'
 import { VolumeChart } from './VolumeChart'
-import { GeographicDistribution } from './GeographicDistribution'
+// import { GeographicDistribution } from './GeographicDistribution'
 import { PaymentMethods } from './PaymentMethods'
 
 export function Analytics() {
@@ -20,7 +20,7 @@ export function Analytics() {
         <PaymentMethods />
       </div>
       
-      <GeographicDistribution />
+      {/* <GeographicDistribution /> */}
     </div>
   )
 }

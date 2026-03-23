@@ -22,16 +22,16 @@ export function MobileChart({ data, title, value, change, type }: MobileChartPro
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#a855f7" 
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#a855f7"
                 strokeWidth={2}
-                fill="url(#gradient)" 
+                fill="url(#gradient)"
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -40,10 +40,10 @@ export function MobileChart({ data, title, value, change, type }: MobileChartPro
         return (
           <ResponsiveContainer width="100%" height={120}>
             <LineChart data={data}>
-              <Line 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#a855f7" 
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#a855f7"
                 strokeWidth={3}
                 dot={false}
               />
@@ -130,9 +130,8 @@ export function MobileSystemHealth() {
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  item.status === 'operational' ? 'bg-green-500' : 'bg-yellow-500'
-                } animate-pulse`}></div>
+                <div className={`w-2 h-2 rounded-full ${item.status === 'operational' ? 'bg-green-500' : 'bg-yellow-500'
+                  } animate-pulse`}></div>
                 <span className="text-sm text-muted-foreground">{item.label}</span>
               </div>
               <span className="text-sm font-medium text-white">{item.value}</span>

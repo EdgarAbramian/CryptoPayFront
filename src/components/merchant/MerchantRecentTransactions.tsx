@@ -84,7 +84,7 @@ export function MerchantRecentTransactions() {
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
                       <div className="font-semibold text-white">
-                        {formatCurrency(tx.amount_usd)}
+                        {formatCurrency(parseFloat(String(tx.amount_usd || tx.amount || tx.amount_received || '0')))}
                       </div>
                       <div className="text-sm text-muted-foreground uppercase">
                         via {tx.coin_symbol}

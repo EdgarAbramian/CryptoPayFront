@@ -88,7 +88,12 @@ export interface RecentTransaction {
   id: string;
   txid: string;
   merchant_name: string | null;
-  amount_usd: number;
+  amount_usd: number | string;
+  amount_fiat?: number | string;
+  amount?: number | string;
+  amount_received?: number | string;
+  coin_symbol?: string;
+  fiat_currency?: string;
   status: string;
   confirmed_at: string | null;
 }

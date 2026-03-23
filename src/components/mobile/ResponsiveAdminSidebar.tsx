@@ -217,7 +217,7 @@ export function ResponsiveAdminSidebar({
 
           {/* Mobile Role Switch */}
           <div className="p-4 border-t border-white/10">
-            <Button 
+            {/* <Button 
               variant="glass" 
               onClick={() => {
                 switchRole('merchant')
@@ -226,7 +226,7 @@ export function ResponsiveAdminSidebar({
               className="w-full justify-center mb-3"
             >
               Switch to Merchant
-            </Button>
+            </Button> */}
             
             <Button 
               variant="ghost" 

@@ -197,8 +197,8 @@ export function MobileUserMenu({ isOpen, onClose, type }: MobileUserMenuProps) {
 
         {/* Bottom Actions */}
         <div className="p-4 border-t border-white/10 space-y-3">
-          {/* Role Switch */}
-          <Button 
+          {/* Role Switch (Hidden) */}
+          {/* <Button 
             variant="glass" 
             className="w-full justify-between"
             onClick={() => {
@@ -211,7 +211,7 @@ export function MobileUserMenu({ isOpen, onClose, type }: MobileUserMenuProps) {
               <span>Switch to {type === 'admin' ? 'Merchant' : 'Admin'}</span>
             </div>
             <ChevronRight className="w-4 h-4" />
-          </Button>
+          </Button> */}
 
           {/* Logout */}
           <Button 

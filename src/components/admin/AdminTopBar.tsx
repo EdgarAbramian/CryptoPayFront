@@ -280,14 +280,14 @@ export function AdminTopBar() {
           <ChevronDown className="w-4 h-4 text-muted-foreground" />
         </div>
 
-        {/* Role Switch (Demo) */}
-        <Button 
+        {/* Role Switch (Hidden) */}
+        {/* <Button 
           variant="glass" 
           size="sm"
           onClick={() => switchRole('merchant')}
         >
           Switch to Merchant
-        </Button>
+        </Button> */}
       </div>
     </header>
   )

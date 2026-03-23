@@ -12,7 +12,11 @@ const statusConfig = {
   FAILED: { color: 'destructive', icon: XCircle }
 }
 
-export function RecentTransactions() {
+interface RecentTransactionsProps {
+  showViewAll?: boolean
+}
+
+export function RecentTransactions({ showViewAll = true }: RecentTransactionsProps) {
   const [transactions, setTransactions] = useState<RecentTransaction[]>([])
 
   const fetchRecent = async () => {
@@ -39,10 +43,12 @@ export function RecentTransactions() {
             Latest payment gateway activity
           </p>
         </div>
-        <Button variant="glass" size="sm">
-          View All
-          <ExternalLink className="w-4 h-4 ml-2" />
-        </Button>
+        {showViewAll && (
+          <Button variant="glass" size="sm">
+            View All
+            <ExternalLink className="w-4 h-4 ml-2" />
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -57,8 +63,8 @@ export function RecentTransactions() {
               >
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 rounded-lg gateway-dark-gradient flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">
-                      TX
+                    <span className="text-xs font-bold text-white uppercase">
+                      {tx.coin_symbol || 'TX'}
                     </span>
                   </div>
                   <div>
@@ -72,10 +78,13 @@ export function RecentTransactions() {
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <div className="font-semibold text-white">
-                      {formatCurrency(tx.amount_usd)}
+                      {formatCurrency(
+                        parseFloat(String(tx.amount_fiat || tx.amount_usd || tx.amount || tx.amount_received || '0')),
+                        tx.fiat_currency || 'USD'
+                      )}
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      USD
+                    <div className="text-sm text-muted-foreground uppercase">
+                      via {tx.coin_symbol || 'USD'}
                     </div>
                   </div>
                   

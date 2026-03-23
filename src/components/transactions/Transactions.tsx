@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { formatCurrency } from '@/lib/utils'
 import { api } from '@/lib/api'
-import { 
-  Search, 
-  Filter, 
-  Download, 
+import {
+  Search,
+  Filter,
+  Download,
   RefreshCw,
   CheckCircle,
   Clock,
@@ -33,48 +33,49 @@ interface Transaction {
   status: 'NEW' | 'PENDING' | 'PARTIAL' | 'PAID' | 'EXPIRED' | 'completed' | 'pending' | 'failed'
   timestamp: string
   fee: number
+  fee_usd: number
   hash: string
 }
 
 const statusConfig = {
-  NEW: { 
-    color: 'warning', 
+  NEW: {
+    color: 'warning',
     icon: PlusCircle,
     bgColor: 'bg-blue-500/10 border-blue-500/20'
   },
-  PENDING: { 
-    color: 'warning', 
+  PENDING: {
+    color: 'warning',
     icon: Clock,
     bgColor: 'bg-yellow-500/10 border-yellow-500/20'
   },
-  PARTIAL: { 
-    color: 'warning', 
+  PARTIAL: {
+    color: 'warning',
     icon: Activity,
     bgColor: 'bg-orange-500/10 border-orange-500/20'
   },
-  PAID: { 
-    color: 'success', 
+  PAID: {
+    color: 'success',
     icon: CheckCircle,
     bgColor: 'bg-green-500/10 border-green-500/20'
   },
-  EXPIRED: { 
-    color: 'destructive', 
+  EXPIRED: {
+    color: 'destructive',
     icon: XCircle,
     bgColor: 'bg-red-500/10 border-red-500/20'
   },
   // Legacy mappings
-  completed: { 
-    color: 'success', 
+  completed: {
+    color: 'success',
     icon: CheckCircle,
     bgColor: 'bg-green-500/10 border-green-500/20'
   },
-  pending: { 
-    color: 'warning', 
+  pending: {
+    color: 'warning',
     icon: Clock,
     bgColor: 'bg-yellow-500/10 border-yellow-500/20'
   },
-  failed: { 
-    color: 'destructive', 
+  failed: {
+    color: 'destructive',
     icon: XCircle,
     bgColor: 'bg-red-500/10 border-red-500/20'
   },
@@ -87,7 +88,7 @@ export function Transactions() {
   const [isExporting, setIsExporting] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
-  
+
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [activeFilters, setActiveFilters] = useState<any>({})
 
@@ -99,20 +100,20 @@ export function Transactions() {
         status: statusFilter === 'all' ? undefined : statusFilter.toUpperCase(),
         ...activeFilters
       }
-      
+
       const isMerchant = user?.role === 'merchant'
-      const data = isMerchant 
+      const data = isMerchant
         ? await api.getMerchantTransactions(filters)
         : await api.getTransactions(filters)
-      
+
       const mappedTransactions = data.map((tx: any) => {
         // Normalizing status to uppercase one of requested statuses if possible
         let status: any = tx.status?.toUpperCase() || 'NEW';
-        
+
         // Handle variations from legacy backend or different endpoints
         if (status === 'CONFIRMED' || status === 'SUCCESS') status = 'PAID';
         if (status === 'FAILED' || status === 'ERROR') status = 'EXPIRED';
-        
+
         // Fallback for UI if not in our new set but in legacy lowercase set
         if (!['NEW', 'PENDING', 'PARTIAL', 'PAID', 'EXPIRED'].includes(status)) {
           if (tx.status === 'completed' || tx.status === 'success') status = 'PAID';
@@ -120,18 +121,19 @@ export function Transactions() {
           else if (tx.status === 'pending' || tx.status === 'confirming') status = 'PENDING';
           else status = 'NEW';
         }
-        
+
         return {
           id: tx.id,
           merchant: tx.merchant_name || (isMerchant ? (user?.name || 'My Business') : `Merchant ${tx.merchant_id?.slice(0, 4) || 'Unknown'}`),
-          amount: parseFloat(tx.amount_usd || tx.amount_received),
-          currency: 'USD',
+          amount: parseFloat(String(tx.amount_fiat || tx.amount_usd || tx.amount || tx.amount_received || '0')),
+          currency: tx.fiat_currency || (tx.currency) || 'USD',
           crypto: tx.coin_symbol || (tx.coin?.symbol) || 'BTC',
           status,
           timestamp: (tx.confirmed_at || tx.created_at || new Date().toISOString())
             .replace('T', ' ')
             .split('.')[0],
-          fee: parseFloat(tx.fee_amount_usd || '0'),
+          fee: parseFloat(tx.fee || '0'),
+          fee_usd: parseFloat(tx.fee_usd || tx.fee_amount_usd || '0'),
           hash: tx.txid,
         }
       })
@@ -156,7 +158,7 @@ export function Transactions() {
       const blob = isMerchant
         ? await api.exportMerchantTransactions(filters, format)
         : await api.exportTransactions(filters, format)
-      
+
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -202,38 +204,37 @@ export function Transactions() {
                     className="pl-10 h-10"
                   />
                 </div>
-                
+
                 <div className="flex bg-black/40 p-1 rounded-lg border border-white/10">
                   {['all', 'PAID', 'PENDING', 'PARTIAL', 'NEW', 'EXPIRED'].map((s) => (
                     <button
                       key={s}
                       onClick={() => setStatusFilter(s)}
-                      className={`px-3 py-1.5 text-[10px] font-bold rounded-md transition-all uppercase tracking-wider ${
-                        statusFilter === s 
-                          ? 'bg-white/10 text-white shadow-lg' 
-                          : 'text-muted-foreground hover:text-white'
-                      }`}
+                      className={`px-3 py-1.5 text-[10px] font-bold rounded-md transition-all uppercase tracking-wider ${statusFilter === s
+                        ? 'bg-white/10 text-white shadow-lg'
+                        : 'text-muted-foreground hover:text-white'
+                        }`}
                     >
                       {s}
                     </button>
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex space-x-2">
-                <Button 
-                  variant={hasActiveFilters ? "default" : "glass"} 
-                  size="sm" 
+                <Button
+                  variant={hasActiveFilters ? "default" : "glass"}
+                  size="sm"
                   className="h-10"
                   onClick={() => setIsFilterModalOpen(true)}
                 >
                   <Filter className={`w-4 h-4 mr-2 ${hasActiveFilters ? 'animate-pulse' : ''}`} />
                   Filter {hasActiveFilters && `(${Object.keys(activeFilters).length})`}
                 </Button>
-                <Button 
-                  variant="glass" 
-                  size="sm" 
-                  className="h-10" 
+                <Button
+                  variant="glass"
+                  size="sm"
+                  className="h-10"
                   onClick={() => handleExport('csv')}
                   disabled={isExporting}
                 >
@@ -253,20 +254,20 @@ export function Transactions() {
                   return (
                     <Badge key={key} variant="secondary" className="bg-white/5 border-white/10 text-xs py-1 px-2 flex items-center gap-1">
                       <span className="text-muted-foreground">{key}:</span> {value.toString()}
-                      <X 
-                        className="w-3 h-3 cursor-pointer hover:text-white" 
+                      <X
+                        className="w-3 h-3 cursor-pointer hover:text-white"
                         onClick={() => {
                           const newFilters = { ...activeFilters };
                           delete newFilters[key];
                           setActiveFilters(newFilters);
-                        }} 
+                        }}
                       />
                     </Badge>
                   )
                 })}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="h-6 text-[10px] uppercase tracking-wider"
                   onClick={() => setActiveFilters({})}
                 >
@@ -278,7 +279,7 @@ export function Transactions() {
         </CardContent>
       </Card>
 
-      <TransactionFilterModal 
+      <TransactionFilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
         currentFilters={activeFilters}
@@ -308,13 +309,12 @@ export function Transactions() {
               {transactions.map((tx) => {
                 const statusInfo = statusConfig[tx.status] || statusConfig.failed
                 const StatusIcon = statusInfo.icon
-                
+
                 return (
                   <div
                     key={tx.id}
-                    className={`p-5 rounded-xl border transition-all duration-300 hover:scale-[1.01] hover:bg-white/5 ${
-                      statusInfo.bgColor
-                    }`}
+                    className={`p-5 rounded-xl border transition-all duration-300 hover:scale-[1.01] hover:bg-white/5 ${statusInfo.bgColor
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-5">
@@ -335,17 +335,17 @@ export function Transactions() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-8">
                         <div className="text-right">
                           <div className="font-black text-white text-xl tracking-tight">
-                            {formatCurrency(tx.amount)}
+                            {formatCurrency(tx.amount, tx.currency)}
                           </div>
                           <div className="text-[11px] font-bold text-muted-foreground tracking-wider uppercase">
-                            Fee: {formatCurrency(tx.fee)}
+                            Fee: {formatCurrency(tx.fee_usd)}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-col items-end space-y-2">
                           <Badge
                             variant={statusInfo.color as any}
@@ -354,14 +354,14 @@ export function Transactions() {
                             <StatusIcon className="w-3 h-3" />
                             <span>{tx.status}</span>
                           </Badge>
-                          
-                          <Button variant="glass" size="icon" className="h-8 w-8 rounded-full border-white/5 bg-white/5 hover:bg-white/10">
+
+                          {/* <Button variant="glass" size="icon" className="h-8 w-8 rounded-full border-white/5 bg-white/5 hover:bg-white/10">
                             <ExternalLink className="w-3.5 h-3.5" />
-                          </Button>
+                          </Button> */}
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
                       <div className="text-[10px] font-medium text-muted-foreground flex items-center gap-2">
                         <span className="uppercase tracking-widest opacity-50">TX Hash:</span>{' '}

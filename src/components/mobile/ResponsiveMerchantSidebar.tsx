@@ -247,7 +247,7 @@ export function ResponsiveMerchantSidebar({
 
           {/* Mobile Role Switch */}
           <div className="p-4 border-t border-white/10">
-            <Button 
+            {/* <Button 
               variant="glass" 
               onClick={() => {
                 switchRole('admin')
@@ -256,7 +256,7 @@ export function ResponsiveMerchantSidebar({
               className="w-full justify-center mb-3"
             >
               Switch to Admin
-            </Button>
+            </Button> */}
             
             <Button 
               variant="ghost" 
