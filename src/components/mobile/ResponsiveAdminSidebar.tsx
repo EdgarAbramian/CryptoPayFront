@@ -58,7 +58,7 @@ export function ResponsiveAdminSidebar({
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center space-x-3">
               <img 
-                src="/logo3.png" 
+                src="./logo3.png" 
                 alt="Nexus PAY" 
                 className="w-16 h-16 object-contain"
               />
@@ -146,7 +146,7 @@ export function ResponsiveAdminSidebar({
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <div className="flex items-center space-x-3">
               <img 
-                src="/logo3.png" 
+                src="./logo3.png" 
                 alt="Nexus PAY" 
                 className="w-10 h-10 object-contain"
               />

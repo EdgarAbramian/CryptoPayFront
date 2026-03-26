@@ -55,7 +55,7 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
         {/* Logo */}
         <div className="text-center space-y-4">
           <img 
-            src="/logo3.png" 
+            src="./logo3.png" 
             alt="Nexus PAY" 
             className="w-20 h-20 mx-auto object-contain"
           />

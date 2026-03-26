@@ -38,7 +38,7 @@ export function AdminSidebar({ currentPage, onPageChange }: AdminSidebarProps) {
         <div className="p-6 border-b border-amber-500/10">
           <div className="flex items-center space-x-3">
             <img 
-              src="/logo3.png" 
+              src="./logo3.png" 
               alt="Nexus PAY" 
               className="w-16 h-16 object-contain"
             />
