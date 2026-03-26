@@ -1,31 +1,10 @@
-import { useState, useEffect } from 'react'
 import { DollarSign, Wallet, Clock, CheckCircle, Loader2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatCurrency, formatNumber } from '@/lib/utils'
-import { api } from '@/lib/api'
+import { useMerchantDashboard } from '@/hooks/useMerchantDashboard'
 
 export function MerchantStatsGrid() {
-  const [statsData, setStatsData] = useState<any>(null)
-  const [profileData, setProfileData] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [stats, profile] = await Promise.all([
-          api.getMerchantDashboardStats(),
-          api.getMerchantProfile()
-        ])
-        setStatsData(stats)
-        setProfileData(profile)
-      } catch (error) {
-        console.error('Failed to fetch merchant stats:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
+  const { stats, isLoading } = useMerchantDashboard()
 
   if (isLoading) {
     return (
@@ -44,7 +23,7 @@ export function MerchantStatsGrid() {
   const cards = [
     {
       title: 'Available Balance',
-      value: statsData?.balance_available_usd || 0,
+      value: stats?.balance_available_usd || 0,
       currency: true,
       icon: Wallet,
       gradient: 'gateway-dark-gradient',
@@ -52,7 +31,7 @@ export function MerchantStatsGrid() {
     },
     {
       title: 'Pending / Locked',
-      value: statsData?.balance_pending_usd || 0,
+      value: stats?.balance_pending_usd || 0,
       currency: true,
       icon: Clock,
       gradient: 'gateway-dark-gradient',
@@ -60,7 +39,7 @@ export function MerchantStatsGrid() {
     },
     {
       title: 'Total Volume',
-      value: statsData?.total_volume_usd || 0,
+      value: stats?.total_volume_usd || 0,
       currency: true,
       icon: DollarSign,
       gradient: 'gateway-dark-gradient',
@@ -68,7 +47,7 @@ export function MerchantStatsGrid() {
     },
     {
       title: 'Success Rate',
-      value: statsData?.success_rate || 0,
+      value: stats?.success_rate || 0,
       suffix: '%',
       icon: CheckCircle,
       gradient: 'gateway-dark-gradient',

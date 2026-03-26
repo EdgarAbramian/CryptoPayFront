@@ -1,12 +1,10 @@
 import { Bell, Search, User, ChevronDown, Wallet, TrendingUp, Menu, X, CreditCard, Key, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { useAuth } from '@/contexts/AuthContext'
-import { useState, useEffect } from 'react'
-// import { MobileNotifications } from './MobileNotifications'
+import { useState } from 'react'
 import { MobileUserMenu } from './MobileUserMenu'
-import { api, MerchantDashboardStats, RevenueOverview } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
+import { useMerchantDashboard } from '@/hooks/useMerchantDashboard'
 import { formatCurrency } from '@/lib/utils'
 
 interface ResponsiveMerchantTopBarProps {
@@ -15,32 +13,12 @@ interface ResponsiveMerchantTopBarProps {
 }
 
 export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMerchantTopBarProps) {
-  const { user, switchRole } = useAuth()
+  const { user } = useAuth()
   const [searchOpen, setSearchOpen] = useState(false)
-  const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
-  const [stats, setStats] = useState<MerchantDashboardStats | null>(null)
-  const [revenue, setRevenue] = useState<RevenueOverview | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [statsData, revenueData] = await Promise.all([
-          api.getMerchantDashboardStats(),
-          api.getMerchantRevenueAnalytics({ period: 'day' })
-        ])
-        setStats(statsData)
-        setRevenue(revenueData)
-      } catch (error) {
-        console.error('Failed to fetch merchant topbar data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
+  // Shared data from singleton hook (no duplicate fetching)
+  const { stats, revenue, isLoading } = useMerchantDashboard()
 
   // Desktop версия - оригинальная без изменений
   if (!isMobile) {
@@ -72,7 +50,7 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
               <div>
                 <div className="text-xs text-muted-foreground">Available</div>
                 <div className="text-sm font-semibold text-white">
-                  {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(stats?.balance_available_usd || 0)}
+                  {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(stats?.balance_available_usd || 0)}
                 </div>
               </div>
             </div>
@@ -82,19 +60,11 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
               <div>
                 <div className="text-xs text-muted-foreground">Today's Revenue</div>
                 <div className="text-sm font-semibold text-green-400">
-                  {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(revenue?.total_revenue_usd || 0)}
+                  {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : formatCurrency(revenue?.total_revenue_usd || 0)}
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Notifications (Hidden as requested) */}
-          {/* <Button variant="ghost" size="icon" className="relative">
-            <Bell className="w-5 h-5" />
-            <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center bg-red-500 text-xs">
-              2
-            </Badge>
-          </Button> */}
 
           {/* User Menu */}
           <div className="flex items-center space-x-3 px-3 py-2 glass-card rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
@@ -107,15 +77,6 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </div>
-
-          {/* Role Switch (Hidden as requested) */}
-          {/* <Button 
-            variant="glass" 
-            size="sm"
-            onClick={() => switchRole('admin')}
-          >
-            Switch to Admin
-          </Button> */}
         </div>
       </header>
     )
@@ -155,19 +116,6 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
           >
             <Search className="w-4 h-4" />
           </Button>
-          
-          {/* Notifications (Hidden as requested) */}
-          {/* <Button 
-            variant="ghost" 
-            size="icon" 
-            className="relative w-9 h-9 p-0"
-            onClick={() => setNotificationsOpen(true)}
-          >
-            <Bell className="w-4 h-4" />
-            <Badge className="absolute -top-1 -right-1 w-4 h-4 p-0 flex items-center justify-center bg-red-500 text-xs">
-              2
-            </Badge>
-          </Button> */}
 
           <button 
             className="w-8 h-8 rounded-full gateway-dark-gradient flex items-center justify-center"
@@ -184,21 +132,25 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
           <div className="flex items-center space-x-4">
             <div className="text-center">
               <div className="text-lg font-bold gradient-text">
-                {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : formatCurrency(stats?.balance_available_usd || 0)}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : formatCurrency(stats?.balance_available_usd || 0)}
               </div>
               <div className="text-xs text-muted-foreground">Available</div>
             </div>
             <div className="w-px h-8 bg-white/20"></div>
             <div className="text-center">
               <div className="text-lg font-bold text-green-400">
-                {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : formatCurrency(revenue?.total_revenue_usd || 0)}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : formatCurrency(revenue?.total_revenue_usd || 0)}
               </div>
               <div className="text-xs text-muted-foreground">Today</div>
             </div>
           </div>
           <div className="flex items-center space-x-1 text-green-400">
             <TrendingUp className="w-4 h-4" />
-            <span className="text-sm font-medium">+12.5%</span>
+            <span className="text-sm font-medium">
+              {revenue && revenue.change_percentage !== 0
+                ? `${revenue.change_percentage > 0 ? '+' : ''}${revenue.change_percentage.toFixed(1)}%`
+                : '—'}
+            </span>
           </div>
         </div>
       </div>
@@ -251,27 +203,9 @@ export function ResponsiveMerchantTopBar({ onMenuClick, isMobile }: ResponsiveMe
                 ))}
               </div>
             </div>
-
-            {/* Recent searches */}
-            <div className="mt-8 space-y-3">
-              <div className="text-sm text-muted-foreground">Recent searches</div>
-              <div className="space-y-2">
-                {['Payment #67890', 'Transaction BTC-123', 'Customer order-456'].map((item) => (
-                  <div key={item} className="p-3 glass-card rounded-lg cursor-pointer hover:bg-white/10 active:scale-95 transition-all">
-                    <div className="text-white">{item}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       )}
-
-      {/* Mobile Notifications (Hidden) */}
-      {/* <MobileNotifications 
-        isOpen={notificationsOpen}
-        onClose={() => setNotificationsOpen(false)}
-      /> */}
 
       {/* Mobile User Menu */}
       <MobileUserMenu 

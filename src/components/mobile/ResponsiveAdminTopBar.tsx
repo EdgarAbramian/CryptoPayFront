@@ -6,7 +6,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useState, useEffect, useRef } from 'react'
 import { MobileNotifications } from './MobileNotifications'
 import { MobileUserMenu } from './MobileUserMenu'
-import { api, GlobalSearchResponse, AdminNotification } from '@/lib/api'
+import { api, GlobalSearchResponse } from '@/lib/api'
+import { useAdminDashboard } from '@/hooks/useAdminDashboard'
 
 interface ResponsiveAdminTopBarProps {
   onMenuClick?: () => void
@@ -14,16 +15,23 @@ interface ResponsiveAdminTopBarProps {
 }
 
 export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdminTopBarProps) {
-  const { user, switchRole } = useAuth()
-  
-  // Shared States
-  const [stats, setStats] = useState({ active_merchants: 0, today_transactions: 0 })
-  const [healthStatus, setHealthStatus] = useState('healthy')
-  const [unreadCount, setUnreadCount] = useState(0)
+  const { user } = useAuth()
+
+  // Shared data from singleton hook (no duplicate polling)
+  const {
+    stats,
+    health,
+    unreadCount,
+    notifications,
+    refetchNotifications,
+    markAsRead,
+    markAllAsRead,
+  } = useAdminDashboard()
+
+  const healthStatus = health?.status ?? 'healthy'
 
   // Desktop Notifications & Search
   const [desktopNotificationsOpen, setDesktopNotificationsOpen] = useState(false)
-  const [notifications, setNotifications] = useState<AdminNotification[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<GlobalSearchResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
@@ -38,26 +46,12 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
   const notifRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetchQuickStats()
-    fetchHealth()
-    fetchUnreadCount()
-
-    const interval = setInterval(() => {
-      fetchQuickStats()
-      fetchHealth()
-      fetchUnreadCount()
-    }, 30000)
-
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) setDesktopSearchOpen(false)
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setDesktopNotificationsOpen(false)
     }
     document.addEventListener('mousedown', handleClickOutside)
-
-    return () => {
-      clearInterval(interval)
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   useEffect(() => {
@@ -81,52 +75,16 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
     return () => clearTimeout(delay)
   }, [searchQuery])
 
-  const fetchQuickStats = async () => {
-    try {
-      const res = await api.getStats()
-      setStats({ active_merchants: res.active_merchants, today_transactions: res.today_transactions })
-    } catch (e) {}
-  }
-
-  const fetchHealth = async () => {
-    try {
-      const res = await api.getSystemHealth()
-      setHealthStatus(res.status)
-    } catch (e) {}
-  }
-
-  const fetchUnreadCount = async () => {
-    try {
-      const res = await api.getUnreadNotificationsCount()
-      setUnreadCount(res.count)
-    } catch (e) {}
-  }
-
   const handleDesktopNotifications = async () => {
     setDesktopNotificationsOpen(!desktopNotificationsOpen)
     if (!desktopNotificationsOpen) {
-      try {
-        const res = await api.getNotifications()
-        setNotifications(res)
-      } catch (e) {}
+      await refetchNotifications()
     }
   }
 
-  const markAsRead = async (id: string, e: React.MouseEvent) => {
+  const handleMarkAsRead = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    try {
-      await api.markNotificationAsRead(id)
-      setNotifications(notifications.map(n => n.id === id ? { ...n, is_read: true } : n))
-      fetchUnreadCount()
-    } catch (e) {}
-  }
-
-  const markAllAsRead = async () => {
-    try {
-      await api.markAllNotificationsAsRead()
-      setNotifications(notifications.map(n => ({ ...n, is_read: true })))
-      fetchUnreadCount()
-    } catch (e) {}
+    await markAsRead(id)
   }
 
   // Desktop версия - оригинальная без изменений
@@ -211,7 +169,7 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
               <Users className="w-4 h-4 text-white/80" />
               <div>
                 <div className="text-xs text-muted-foreground">Active Merchants</div>
-                <div className="text-sm font-semibold text-white">{stats.active_merchants}</div>
+                <div className="text-sm font-semibold text-white">{stats?.active_merchants ?? 0}</div>
               </div>
             </div>
             <div className="w-px h-8 bg-white/10"></div>
@@ -219,7 +177,7 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
               <CreditCard className="w-4 h-4 text-white/80" />
               <div>
                 <div className="text-xs text-muted-foreground">Today's Transactions</div>
-                <div className="text-sm font-semibold text-white">{stats.today_transactions}</div>
+                <div className="text-sm font-semibold text-white">{stats?.today_transactions ?? 0}</div>
               </div>
             </div>
           </div>
@@ -262,7 +220,7 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
                           <div className="text-[10px] text-muted-foreground/60 mt-1">{new Date(n.created_at).toLocaleString()}</div>
                         </div>
                         {!n.is_read && (
-                          <button onClick={(e) => markAsRead(n.id, e)} className="w-2 h-2 rounded-full bg-amber-500 hover:bg-amber-400 flex-shrink-0" />
+                          <button onClick={(e) => handleMarkAsRead(n.id, e)} className="w-2 h-2 rounded-full bg-amber-500 hover:bg-amber-400 flex-shrink-0" />
                         )}
                       </div>
                     ))
@@ -285,15 +243,6 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
             </div>
             <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </div>
-
-          {/* Role Switch (Hidden) */}
-          {/* <Button 
-            variant="glass" 
-            size="sm"
-            onClick={() => switchRole('merchant')}
-          >
-            Switch to Merchant
-          </Button> */}
         </div>
       </header>
     )
@@ -364,12 +313,12 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="text-center">
-              <div className="text-lg font-bold text-white">{stats.active_merchants}</div>
+              <div className="text-lg font-bold text-white">{stats?.active_merchants ?? 0}</div>
               <div className="text-xs text-muted-foreground">Merchants</div>
             </div>
             <div className="w-px h-8 bg-white/20"></div>
             <div className="text-center">
-              <div className="text-lg font-bold text-white">{stats.today_transactions}</div>
+              <div className="text-lg font-bold text-white">{stats?.today_transactions ?? 0}</div>
               <div className="text-xs text-muted-foreground">Transactions</div>
             </div>
           </div>
@@ -463,7 +412,6 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
         isOpen={mobileNotificationsOpen}
         onClose={() => setMobileNotificationsOpen(false)}
       />
-
 
       {/* Mobile User Menu */}
       <MobileUserMenu 

@@ -1,26 +1,10 @@
-import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Activity, Server, Database, ServerCrash, CheckCircle, AlertTriangle } from 'lucide-react'
-import { api, SystemHealth } from '@/lib/api'
+import { useAdminDashboard } from '@/hooks/useAdminDashboard'
 
 export function AdminSystemHealth() {
-  const [health, setHealth] = useState<SystemHealth | null>(null)
-
-  const fetchHealth = async () => {
-    try {
-      const data = await api.getSystemHealth()
-      setHealth(data)
-    } catch(err) {
-      console.error(err)
-    }
-  }
-
-  useEffect(() => {
-    fetchHealth()
-    const interval = setInterval(fetchHealth, 15000) // Poll every 15s
-    return () => clearInterval(interval)
-  }, [])
+  const { health } = useAdminDashboard()
 
   if (!health) return null;
 

@@ -110,7 +110,7 @@ export function MerchantRevenueChart() {
                 stroke="#f59e0b"
                 strokeWidth={3}
                 fill="url(#revenueGradient)"
-                animationDuration={1500}
+                animationDuration={400}
                 activeDot={{ r: 6, fill: '#f59e0b', strokeWidth: 0 }}
               />
             </AreaChart>

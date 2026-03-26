@@ -2,76 +2,12 @@ import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, DollarSign, Users, CreditCard, Shield, Server, AlertTriangle, Loader2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatCurrency, formatNumber } from '@/lib/utils'
-import { api } from '@/lib/api'
+import { useAdminDashboard } from '@/hooks/useAdminDashboard'
 
 export function AdminStatsGrid() {
-  const [stats, setStats] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { stats, isLoading } = useAdminDashboard()
 
-  useEffect(() => {
-    async function loadStats() {
-      try {
-        const data = await api.getAdminStats()
-        const mappedStats = [
-          {
-            title: 'Total Platform Revenue',
-            value: parseFloat(data.total_revenue),
-            currency: true,
-            change: 12.5,
-            icon: DollarSign,
-            gradient: 'gateway-dark-gradient',
-          },
-          {
-            title: 'Active Merchants',
-            value: data.active_merchants,
-            change: 5.2,
-            icon: Users,
-            gradient: 'gateway-dark-gradient',
-          },
-          {
-            title: 'Total Transactions',
-            value: data.total_transactions || 0,
-            change: 0,
-            icon: CreditCard,
-            gradient: 'gateway-dark-gradient',
-          },
-          {
-            title: 'Success Rate',
-            value: data.success_rate,
-            suffix: '%',
-            change: 0,
-            icon: Shield,
-            gradient: 'gateway-dark-gradient',
-          },
-          {
-            title: 'Pending Approvals',
-            value: data.pending_merchants,
-            change: 0,
-            icon: AlertTriangle,
-            gradient: 'gateway-dark-gradient',
-          },
-          {
-            title: 'Active Nodes',
-            value: data.active_nodes || 0,
-            change: 0,
-            icon: Server,
-            gradient: 'gateway-dark-gradient',
-          },
-        ]
-        setStats(mappedStats)
-      } catch (err) {
-        setError('Failed to load stats')
-        console.error(err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadStats()
-  }, [])
-
-  if (isLoading) {
+  if (isLoading || !stats) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -85,17 +21,56 @@ export function AdminStatsGrid() {
     )
   }
 
-  if (error) {
-    return (
-      <div className="p-4 glass-card border-red-500/50 text-red-400">
-        {error}
-      </div>
-    )
-  }
+  const mappedStats = [
+    {
+      title: 'Total Platform Revenue',
+      value: parseFloat(stats.total_revenue),
+      currency: true,
+      change: 12.5,
+      icon: DollarSign,
+      gradient: 'gateway-dark-gradient',
+    },
+    {
+      title: 'Active Merchants',
+      value: stats.active_merchants,
+      change: 5.2,
+      icon: Users,
+      gradient: 'gateway-dark-gradient',
+    },
+    {
+      title: 'Total Transactions',
+      value: stats.total_transactions || 0,
+      change: 0,
+      icon: CreditCard,
+      gradient: 'gateway-dark-gradient',
+    },
+    {
+      title: 'Success Rate',
+      value: stats.success_rate,
+      suffix: '%',
+      change: 0,
+      icon: Shield,
+      gradient: 'gateway-dark-gradient',
+    },
+    {
+      title: 'Pending Approvals',
+      value: stats.pending_merchants,
+      change: 0,
+      icon: AlertTriangle,
+      gradient: 'gateway-dark-gradient',
+    },
+    {
+      title: 'Active Nodes',
+      value: stats.active_nodes || 0,
+      change: 0,
+      icon: Server,
+      gradient: 'gateway-dark-gradient',
+    },
+  ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {stats.map((stat) => {
+      {mappedStats.map((stat) => {
         const isPositive = stat.change > 0
         const IconComponent = stat.icon
         

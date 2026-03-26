@@ -22,4 +22,37 @@ export default defineConfig({
       'all'
     ]
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core — cached separately
+          'vendor-react': ['react', 'react-dom'],
+          // Radix UI components
+          'vendor-radix': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-select',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slider',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-toast',
+          ],
+          // Recharts — large chart library
+          'vendor-recharts': ['recharts'],
+          // Lucide icons
+          'vendor-lucide': ['lucide-react'],
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'lucide-react', 'recharts'],
+  },
 })

@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export function useMobile() {
   const [isMobile, setIsMobile] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -13,10 +14,19 @@ export function useMobile() {
       }
     }
 
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
+    // Debounced version — prevents rapid-fire re-renders during resize
+    const handleResize = () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current)
+      debounceTimer.current = setTimeout(checkMobile, 150)
+    }
+
+    checkMobile() // Run immediately on mount (no debounce needed here)
+    window.addEventListener('resize', handleResize)
     
-    return () => window.removeEventListener('resize', checkMobile)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      if (debounceTimer.current) clearTimeout(debounceTimer.current)
+    }
   }, [])
 
   // Блокируем скролл body когда мобильное меню открыто

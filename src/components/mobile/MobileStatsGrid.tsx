@@ -1,6 +1,7 @@
 import { TrendingUp, TrendingDown, DollarSign, Users, CreditCard, Shield, Server, AlertTriangle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatCurrency, formatNumber } from '@/lib/utils'
+import { useMerchantDashboard } from '@/hooks/useMerchantDashboard'
 
 interface StatItem {
   title: string
@@ -167,39 +168,59 @@ export function MobileAdminStatsGrid() {
 }
 
 export function MobileMerchantStatsGrid() {
+  // Use real API data via shared hook instead of hardcoded fake values
+  const { stats: merchantStats, revenue, isLoading } = useMerchantDashboard()
+
   const stats = [
     {
       title: 'Available Balance',
-      value: 15247.82,
+      value: merchantStats?.balance_available_usd || 0,
       currency: true,
-      change: 8.4,
+      change: 0,
       icon: DollarSign,
       gradient: 'gateway-dark-gradient',
     },
     {
       title: "Today's Revenue",
-      value: 1892.34,
+      value: revenue?.total_revenue_usd || 0,
       currency: true,
-      change: 23.1,
+      change: revenue?.change_percentage || 0,
       icon: TrendingUp,
       gradient: 'gateway-dark-gradient',
     },
     {
       title: 'Total Transactions',
-      value: 1247,
-      change: 12.3,
+      value: merchantStats?.total_transactions || 0,
+      change: 0,
       icon: CreditCard,
       gradient: 'gateway-dark-gradient',
     },
     {
       title: 'Success Rate',
-      value: 99.2,
+      value: merchantStats?.success_rate || 0,
       suffix: '%',
-      change: 0.8,
+      change: 0,
       icon: Shield,
       gradient: 'gateway-dark-gradient',
     },
   ]
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-28 rounded-xl bg-white/5 animate-pulse" />
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return <MobileStatsGrid stats={stats} layout="merchant" />
 }
