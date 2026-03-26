@@ -6,8 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://80.89.238.37:8000/api
+        - VITE_API_URL=https://cryptantus.com/api
     ports:
       - "80:80"
+      - "443:443"
     restart: always
     container_name: nexus-pay-frontend
