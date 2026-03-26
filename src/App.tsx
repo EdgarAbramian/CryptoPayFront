@@ -34,10 +34,13 @@ function AuthWrapper() {
   return <RoleBasedApp />
 }
 
+import { Toaster } from './components/ui/toaster'
+
 function App() {
   return (
     <AuthProvider>
       <AuthWrapper />
+      <Toaster />
     </AuthProvider>
   )
 }

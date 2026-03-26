@@ -48,8 +48,13 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
       })
       toast({
         title: "Registration Successful",
-        description: "Your account is pending approval",
+        description: "Your account has been created. Please sign in.",
+        variant: "success",
       })
+      // Switch to login after a short delay to let user see the toast
+      setTimeout(() => {
+        onSwitchToLogin()
+      }, 1500)
     } catch (error) {
       toast({
         title: "Registration Failed",
