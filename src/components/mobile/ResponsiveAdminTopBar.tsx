@@ -1,4 +1,12 @@
-import { Bell, Search, User, ChevronDown, Activity, Users, CreditCard, Menu, X, CheckCircle } from 'lucide-react'
+import { Bell, Search, User, ChevronDown, Activity, Users, CreditCard, Menu, X, CheckCircle, LogOut } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -15,7 +23,7 @@ interface ResponsiveAdminTopBarProps {
 }
 
 export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdminTopBarProps) {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   // Shared data from singleton hook (no duplicate polling)
   const {
@@ -233,16 +241,28 @@ export function ResponsiveAdminTopBar({ onMenuClick, isMobile }: ResponsiveAdmin
           </div>
 
           {/* User Menu */}
-          <div className="flex items-center space-x-3 px-3 py-2 glass-card rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
-            <div className="w-8 h-8 rounded-full gateway-dark-gradient flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
-            </div>
-            <div className="hidden md:block">
-              <div className="text-sm font-medium text-white">{user?.name}</div>
-              <div className="text-xs text-muted-foreground">Administrator</div>
-            </div>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center space-x-3 px-3 py-2 glass-card rounded-lg cursor-pointer hover:bg-white/10 transition-colors outline-none border-none">
+                <div className="w-8 h-8 rounded-full gateway-dark-gradient flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
+                </div>
+                <div className="hidden md:block text-left">
+                  <div className="text-sm font-medium text-white">{user?.name}</div>
+                  <div className="text-xs text-muted-foreground">Administrator</div>
+                </div>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="text-red-400 focus:text-red-400 cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sign Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
     )

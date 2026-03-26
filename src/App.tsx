@@ -12,9 +12,9 @@ function AuthWrapper() {
     return (
       <div className="premium-bg min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <img 
-            src="./logo3.png" 
-            alt="Nexus PAY" 
+          <img
+            src="./logo3.png"
+            alt="Nexus PAY"
             className="w-20 h-20 mx-auto object-contain animate-pulse"
           />
           <div className="text-lg gradient-text">Loading...</div>
