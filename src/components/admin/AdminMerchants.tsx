@@ -435,109 +435,118 @@ export function AdminMerchants() {
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {merchants.map((merchant) => (
-            <Card
-              key={merchant.id}
-              className={`hover-glow border transition-all duration-300 ${
-                statusConfig[merchant.status]?.bgColor || 'bg-slate-900/50'
-              }`}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 rounded-lg gateway-dark-gradient flex items-center justify-center">
-                      <Building2 className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white">{merchant.name}</h3>
-                      <p className="text-sm text-muted-foreground">{merchant.email}</p>
-                      <p className="text-xs text-muted-foreground mt-1">ID: {merchant.id}</p>
-                    </div>
-                  </div>
-                  
-                    <div className="flex items-center space-x-2">
-                      <Badge
-                        className={`${
-                          tierColors[merchant.tier]
-                        } text-white capitalize border border-white/20`}
-                      >
+        <Card className="hover-glow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Merchant</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">API Key</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Volume</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Txns</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Commission</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tier</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Active</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {merchants.map((merchant) => (
+                  <tr
+                    key={merchant.id}
+                    className={`group transition-colors hover:bg-white/5 ${merchant.status === 'suspended' ? 'opacity-70' : ''}`}
+                  >
+                    {/* Merchant info */}
+                    <td className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-lg gateway-dark-gradient flex items-center justify-center flex-shrink-0">
+                          <Building2 className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-semibold text-white truncate max-w-[160px]">{merchant.name}</div>
+                          <div className="text-xs text-muted-foreground truncate max-w-[160px]">{merchant.email}</div>
+                          <div className="text-[10px] text-muted-foreground/60">#{merchant.id}</div>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* API Key */}
+                    <td className="px-4 py-3">
+                      <code className="text-xs text-white/60 font-mono bg-black/30 px-2 py-1 rounded block max-w-[140px] truncate">
+                        {merchant.apiKey}
+                      </code>
+                    </td>
+
+                    {/* Volume */}
+                    <td className="px-4 py-3 text-right font-semibold text-white">{formatCurrency(merchant.volume)}</td>
+
+                    {/* Transactions */}
+                    <td className="px-4 py-3 text-right font-semibold text-white">{merchant.transactions.toLocaleString()}</td>
+
+                    {/* Commission */}
+                    <td className="px-4 py-3 text-right font-semibold text-white">{merchant.commission}%</td>
+
+                    {/* Tier */}
+                    <td className="px-4 py-3 text-center">
+                      <Badge className="gateway-dark-gradient text-white capitalize border border-white/20 text-xs">
                         {merchant.tier}
                       </Badge>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-xs h-7 px-2"
-                        onClick={() => handleRotateKey(merchant.id)}
-                      >
-                        Rotate Key
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditClick(merchant)}>
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 p-2 rounded bg-black/20 border border-white/5">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">API Key</p>
-                    <code className="text-xs text- champagne-gold/80 block truncate">
-                      {merchant.apiKey}
-                    </code>
-                  </div>
-                
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Volume</p>
-                    <p className="font-semibold text-white">{formatCurrency(merchant.volume)}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Transactions</p>
-                    <p className="font-semibold text-white">{merchant.transactions.toLocaleString()}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Commission</p>
-                    <p className="font-semibold text-white">{merchant.commission}%</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">API Keys</p>
-                    <p className="font-semibold text-white">{merchant.apiKeys}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant={statusConfig[merchant.status]?.color as any || 'outline'}>
-                      {merchant.status}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground flex items-center">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      Since {merchant.created}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    {merchant.status === 'pending' && (
-                      <Button size="sm" variant="default" onClick={() => handleUpdateStatus(merchant.id, 'active')}>
-                        <Shield className="w-3 h-3 mr-1" />
-                        Approve
-                      </Button>
-                    )}
-                    {merchant.status === 'active' && (
-                      <Button size="sm" variant="destructive" onClick={() => handleUpdateStatus(merchant.id, 'suspended')}>
-                        <Ban className="w-3 h-3 mr-1" />
-                        Suspend
-                      </Button>
-                    )}
-                    <Switch 
-                      checked={merchant.status === 'active'} 
-                      onCheckedChange={(checked) => handleUpdateStatus(merchant.id, checked ? 'active' : 'suspended')}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex flex-col items-center space-y-1">
+                        <Badge variant={statusConfig[merchant.status]?.color as any || 'outline'} className="text-xs">
+                          {merchant.status}
+                        </Badge>
+                        <span className="text-[10px] text-muted-foreground flex items-center">
+                          <Calendar className="w-2.5 h-2.5 mr-0.5" />{merchant.created}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Toggle */}
+                    <td className="px-4 py-3 text-center">
+                      <Switch
+                        checked={merchant.status === 'active'}
+                        onCheckedChange={(checked) => handleUpdateStatus(merchant.id, checked ? 'active' : 'suspended')}
+                      />
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end space-x-1">
+                        {merchant.status === 'pending' && (
+                          <Button size="sm" variant="default" className="h-7 px-2 text-xs" onClick={() => handleUpdateStatus(merchant.id, 'active')}>
+                            <Shield className="w-3 h-3 mr-1" />Approve
+                          </Button>
+                        )}
+                        {merchant.status === 'active' && (
+                          <Button size="sm" variant="destructive" className="h-7 px-2 text-xs" onClick={() => handleUpdateStatus(merchant.id, 'suspended')}>
+                            <Ban className="w-3 h-3 mr-1" />Suspend
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground hover:text-white" onClick={() => handleRotateKey(merchant.id)}>
+                          Rotate Key
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditClick(merchant)}>
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {merchants.length === 0 && (
+              <div className="py-16 text-center text-muted-foreground">
+                <Building2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>No merchants found.</p>
+              </div>
+            )}
+          </div>
+        </Card>
       )}
     </div>
   )

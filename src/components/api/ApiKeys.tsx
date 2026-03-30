@@ -20,7 +20,6 @@ import {
   Loader2,
   Check,
   Globe, 
-  Code, 
   ExternalLink
 } from 'lucide-react'
 
@@ -153,26 +152,20 @@ export function ApiKeys() {
 
             <div className="space-y-2">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Documentation</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="#" className="p-4 glass-card rounded-lg hover:bg-white/5 border border-white/5 flex items-center justify-between group transition-all">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
-                      <Globe className="w-4 h-4 text-blue-400" />
-                    </div>
-                    <span className="text-sm font-medium">API Reference</span>
+              <a
+                href="https://cryptantus.com/api/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full p-4 glass-card rounded-lg hover:bg-white/5 border border-white/5 flex items-center justify-between group transition-all"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                    <Globe className="w-4 h-4 text-blue-400" />
                   </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-white" />
-                </a>
-                <a href="#" className="p-4 glass-card rounded-lg hover:bg-white/5 border border-white/5 flex items-center justify-between group transition-all">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
-                      <Code className="w-4 h-4 text-green-400" />
-                    </div>
-                    <span className="text-sm font-medium">SDKs & Libraries</span>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-white" />
-                </a>
-              </div>
+                  <span className="text-sm font-medium">API Reference</span>
+                </div>
+                <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-white" />
+              </a>
             </div>
           </CardContent>
         </Card>
