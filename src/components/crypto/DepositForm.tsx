@@ -112,10 +112,7 @@ export function DepositForm({ wallet, onSubmit }: DepositFormProps) {
   const generateNewAddress = async () => {
     setIsGeneratingAddress(true)
     try {
-      // Simulate API call to generate new address
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Generate mock address based on network
+      // Generate address based on network
       let newAddress = ''
       if (selectedNetwork === 'Bitcoin') {
         newAddress = 'bc1q' + Math.random().toString(36).substring(2, 42)

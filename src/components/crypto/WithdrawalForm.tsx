@@ -99,41 +99,33 @@ export function WithdrawalForm({ wallet, onSubmit }: WithdrawalFormProps) {
   const amountAfterFee = parseFloat(amount) ? Math.max(0, parseFloat(amount) - withdrawalFee) : 0
   const maxWithdrawable = Math.max(0, wallet.balance - withdrawalFee)
 
-  const validateAddress = async (addressToValidate: string) => {
+  const validateAddress = (addressToValidate: string) => {
     if (!addressToValidate) {
       setAddressValid(null)
       return
     }
 
     setIsValidating(true)
-    try {
-      // Simulate address validation
-      await new Promise(resolve => setTimeout(resolve, 800))
-      
-      let isValid = false
-      
-      // Basic validation based on network
-      if (selectedNetwork === 'Bitcoin') {
-        isValid = addressToValidate.match(/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,87}$/) !== null
-      } else if (selectedNetwork.includes('Ethereum') || selectedNetwork.includes('ERC') || selectedNetwork.includes('BEP')) {
-        isValid = addressToValidate.match(/^0x[a-fA-F0-9]{40}$/) !== null
-      } else if (selectedNetwork.includes('TRC')) {
-        isValid = addressToValidate.match(/^T[a-zA-Z0-9]{33}$/) !== null
-      }
-      
-      setAddressValid(isValid)
-      
-      if (!isValid) {
-        toast({
-          title: "Invalid address",
-          description: `Please enter a valid ${selectedNetwork} address`,
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      setAddressValid(false)
-    } finally {
-      setIsValidating(false)
+    let isValid = false
+    
+    // Basic validation based on network
+    if (selectedNetwork === 'Bitcoin') {
+      isValid = addressToValidate.match(/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,87}$/) !== null
+    } else if (selectedNetwork.includes('Ethereum') || selectedNetwork.includes('ERC') || selectedNetwork.includes('BEP')) {
+      isValid = addressToValidate.match(/^0x[a-fA-F0-9]{40}$/) !== null
+    } else if (selectedNetwork.includes('TRC')) {
+      isValid = addressToValidate.match(/^T[a-zA-Z0-9]{33}$/) !== null
+    }
+    
+    setAddressValid(isValid)
+    setIsValidating(false)
+    
+    if (!isValid) {
+      toast({
+        title: "Invalid address",
+        description: `Please enter a valid ${selectedNetwork} address`,
+        variant: "destructive",
+      })
     }
   }
 
@@ -141,10 +133,10 @@ export function WithdrawalForm({ wallet, onSubmit }: WithdrawalFormProps) {
     setAddress(newAddress)
     setAddressValid(null)
     
-    // Debounce validation
+    // Debounce validation — 300ms is enough for smooth UX
     const timeoutId = setTimeout(() => {
       validateAddress(newAddress)
-    }, 1000)
+    }, 300)
     
     return () => clearTimeout(timeoutId)
   }

@@ -90,7 +90,7 @@ export function ResponsiveMerchantSidebar({
                     key={item.name}
                     onClick={() => onPageChange(item.page)}
                     className={cn(
-                      "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-300 ease-out",
+                      "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-150 ease-out",
                       isActive
                         ? "gateway-dark-gradient text-white shadow-lg"
                         : "text-muted-foreground hover:text-white hover:bg-white/5 hover:scale-[1.02]"
@@ -149,7 +149,7 @@ export function ResponsiveMerchantSidebar({
 
       {/* Mobile Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-[55] w-80 max-w-[85vw] glass-card border-r border-white/10 transform transition-transform duration-300 ease-out",
+        "fixed inset-y-0 left-0 z-[55] w-80 max-w-[85vw] glass-card border-r border-white/10 transform transition-transform duration-200 ease-out",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
@@ -222,7 +222,7 @@ export function ResponsiveMerchantSidebar({
                     key={item.name}
                     onClick={() => handlePageChange(item.page)}
                     className={cn(
-                      "w-full flex items-center justify-between px-4 py-4 rounded-xl text-left transition-all duration-200",
+                      "w-full flex items-center justify-between px-4 py-4 rounded-xl text-left transition-all duration-150",
                       isActive
                         ? "gateway-dark-gradient text-white shadow-lg scale-[1.02]"
                         : "text-muted-foreground hover:text-white hover:bg-white/5 active:scale-[0.98]"

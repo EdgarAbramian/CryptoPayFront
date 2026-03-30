@@ -183,7 +183,7 @@ export function MobileBottomNavbarExtended({ currentPage, onPageChange, type }: 
                 key={item.id}
                 onClick={() => onPageChange(item.id)}
                 className={cn(
-                  "flex flex-col items-center justify-center space-y-1 p-2 rounded-lg transition-all duration-200 mx-1",
+                  "flex flex-col items-center justify-center space-y-1 p-2 rounded-lg transition-all duration-150 mx-1",
                   "min-w-[60px] max-w-[70px]",
                   isActive
                     ? "transform scale-110"
@@ -195,7 +195,7 @@ export function MobileBottomNavbarExtended({ currentPage, onPageChange, type }: 
               >
                 {/* Icon Container with Enhanced Effects */}
                 <div className={cn(
-                  "relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300",
+                  "relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-150",
                   isActive
                     ? "gateway-dark-gradient shadow-lg shadow-purple-500/25 scale-110"
                     : "bg-white/5 hover:bg-white/10"
